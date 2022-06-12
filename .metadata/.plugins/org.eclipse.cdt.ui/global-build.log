@@ -1,99 +1,21 @@
-19:11:06 **** Incremental Build of configuration Debug for project step_motor_stm32f4 ****
+20:39:51 **** Incremental Build of configuration Debug for project bmp180_stm32L0 ****
 make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "step_motor_stm32f4.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\mucah\Desktop\MCU Courses\Low_power_MCU\step_motor_stm32f4\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="step_motor_stm32f4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: step_motor_stm32f4.elf
- 
-arm-none-eabi-objdump -h -S  step_motor_stm32f4.elf  > "step_motor_stm32f4.list"
-arm-none-eabi-objcopy  -O binary  step_motor_stm32f4.elf  "step_motor_stm32f4.bin"
-arm-none-eabi-size   step_motor_stm32f4.elf 
+arm-none-eabi-size   bmp180_stm32L0.elf 
    text	   data	    bss	    dec	    hex	filename
-   8944	     20	   1644	  10608	   2970	step_motor_stm32f4.elf
+  27804	    124	   1860	  29788	   745c	bmp180_stm32L0.elf
 Finished building: default.size.stdout
  
-Finished building: step_motor_stm32f4.list
-Finished building: step_motor_stm32f4.bin
- 
- 
-19:11:27 **** Incremental Build of configuration Debug for project step_motor_stm32f4 ****
+20:40:04 **** Incremental Build of configuration Debug for project bmp180_stm32L0 ****
 make -j12 all 
-arm-none-eabi-size   step_motor_stm32f4.elf 
+arm-none-eabi-size   bmp180_stm32L0.elf 
    text	   data	    bss	    dec	    hex	filename
-   8944	     20	   1644	  10608	   2970	step_motor_stm32f4.elf
+  27804	    124	   1860	  29788	   745c	bmp180_stm32L0.elf
 Finished building: default.size.stdout
  
-19:12:16 **** Incremental Build of configuration Debug for project step_motor_stm32f4 ****
+20:40:28 **** Incremental Build of configuration Debug for project bmp180_stm32L0 ****
 make -j12 all 
-arm-none-eabi-size   step_motor_stm32f4.elf 
+arm-none-eabi-size   bmp180_stm32L0.elf 
    text	   data	    bss	    dec	    hex	filename
-   8944	     20	   1644	  10608	   2970	step_motor_stm32f4.elf
+  27804	    124	   1860	  29788	   745c	bmp180_stm32L0.elf
 Finished building: default.size.stdout
- 
-19:28:49 **** Incremental Build of configuration Debug for project step_motor_stm32f4 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "step_motor_stm32f4.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\mucah\Desktop\MCU Courses\Low_power_MCU\step_motor_stm32f4\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="step_motor_stm32f4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: step_motor_stm32f4.elf
- 
-arm-none-eabi-objdump -h -S  step_motor_stm32f4.elf  > "step_motor_stm32f4.list"
-arm-none-eabi-objcopy  -O binary  step_motor_stm32f4.elf  "step_motor_stm32f4.bin"
-arm-none-eabi-size   step_motor_stm32f4.elf 
-   text	   data	    bss	    dec	    hex	filename
-   8920	     20	   1644	  10584	   2958	step_motor_stm32f4.elf
-Finished building: default.size.stdout
- 
-Finished building: step_motor_stm32f4.bin
-Finished building: step_motor_stm32f4.list
- 
- 
-19:29:14 **** Incremental Build of configuration Debug for project step_motor_stm32f4 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "step_motor_stm32f4.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\mucah\Desktop\MCU Courses\Low_power_MCU\step_motor_stm32f4\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="step_motor_stm32f4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: step_motor_stm32f4.elf
- 
-arm-none-eabi-objdump -h -S  step_motor_stm32f4.elf  > "step_motor_stm32f4.list"
-arm-none-eabi-objcopy  -O binary  step_motor_stm32f4.elf  "step_motor_stm32f4.bin"
-arm-none-eabi-size   step_motor_stm32f4.elf 
-   text	   data	    bss	    dec	    hex	filename
-   8920	     20	   1644	  10584	   2958	step_motor_stm32f4.elf
-Finished building: default.size.stdout
- 
-Finished building: step_motor_stm32f4.bin
-Finished building: step_motor_stm32f4.list
- 
- 
-19:29:41 **** Incremental Build of configuration Debug for project step_motor_stm32f4 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "step_motor_stm32f4.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\mucah\Desktop\MCU Courses\Low_power_MCU\step_motor_stm32f4\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="step_motor_stm32f4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: step_motor_stm32f4.elf
- 
-arm-none-eabi-objdump -h -S  step_motor_stm32f4.elf  > "step_motor_stm32f4.list"
-arm-none-eabi-objcopy  -O binary  step_motor_stm32f4.elf  "step_motor_stm32f4.bin"
-arm-none-eabi-size   step_motor_stm32f4.elf 
-   text	   data	    bss	    dec	    hex	filename
-   8920	     20	   1644	  10584	   2958	step_motor_stm32f4.elf
-Finished building: default.size.stdout
- 
-Finished building: step_motor_stm32f4.bin
-Finished building: step_motor_stm32f4.list
- 
- 
-19:29:59 **** Incremental Build of configuration Debug for project step_motor_stm32f4 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "step_motor_stm32f4.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\mucah\Desktop\MCU Courses\Low_power_MCU\step_motor_stm32f4\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="step_motor_stm32f4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: step_motor_stm32f4.elf
- 
-arm-none-eabi-objdump -h -S  step_motor_stm32f4.elf  > "step_motor_stm32f4.list"
-arm-none-eabi-objcopy  -O binary  step_motor_stm32f4.elf  "step_motor_stm32f4.bin"
-arm-none-eabi-size   step_motor_stm32f4.elf 
-   text	   data	    bss	    dec	    hex	filename
-   8920	     20	   1644	  10584	   2958	step_motor_stm32f4.elf
-Finished building: default.size.stdout
- 
-Finished building: step_motor_stm32f4.bin
-Finished building: step_motor_stm32f4.list
- 
  

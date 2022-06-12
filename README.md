@@ -39,3 +39,11 @@ Give it the right voltage: The BMP180 will operate on voltages from 1.8V to 3.6V
 **Don't blind it**: Surprisingly, the silicon within the BMP180 is sensitive to light, which can enter the device through the hole on the top of the chip. For maximum accuracy, shield the chip from ambient light.
 
 Source: Sparkfun bmp180 tutorial
+
+### Acceleration Sensor (ADXL345)  with STM32L0 MCU
+
+
+### MPU6050 6 Axis Acceleration and Gyro Sensor
+
+
+###

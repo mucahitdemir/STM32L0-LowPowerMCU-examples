@@ -5,6 +5,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "BMP180.h"
+#include "stdio.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,6 +46,11 @@ static void MX_USART2_UART_Init(void);
 float temperature;
 float pressure;
 float altitude;
+
+char temperature_UART[10]={0};
+char pressure_UART[10]={0};
+char altitude_UART[10]={0};
+char UART_intro_message[] ="BMP180 sensor is activated";
 /* USER CODE END 0 */
 
 /**
@@ -77,8 +84,11 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
   BMP180_Start(); //calibration data
+
   /* USER CODE END 2 */
+  HAL_UART_Transmit(&huart2, (uint8_t*)UART_intro_message, sizeof(UART_intro_message), 500);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -90,6 +100,19 @@ int main(void)
 	  altitude  = BMP180_GetAlt(0);
 
 	  HAL_Delay(2000);
+
+	  sprintf((char*)temperature_UART, "%.2f", temperature);
+	  sprintf((char*)pressure_UART, "%.2f", pressure);
+	  sprintf((char*)altitude_UART, "%.2f", altitude);
+
+
+	  HAL_UART_Transmit(&huart2, (uint8_t*)temperature_UART, sizeof(temperature_UART), 500);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)pressure_UART, sizeof(pressure_UART), 500);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)altitude_UART, sizeof(altitude_UART), 500);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)"\n", 1, 100);
+
 
     /* USER CODE BEGIN 3 */
   }

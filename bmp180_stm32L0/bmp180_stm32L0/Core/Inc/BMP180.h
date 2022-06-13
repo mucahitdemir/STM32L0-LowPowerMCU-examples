@@ -2,11 +2,11 @@
   ******************************************************************************
 
   BMP180 LIBRARY for STM32 using I2C
-  Author:   ControllersTech
-  Updated:  26/07/2020
+  Author:   Mucahit Demirci
+  Updated:  13/06/2022
 
   ******************************************************************************
-  Copyright (C) 2017 ControllersTech.com
+  Copyright (C) 2017 Mucahit Demirci
 
   This is a free software under the GNU license, you can redistribute it and/or modify it under the terms
   of the GNU General Public License version 3 as published by the Free Software Foundation.
@@ -24,10 +24,10 @@
 
 void BMP180_Start (void);
 
-float BMP180_GetTemp (void);
+float BMP180_Temperature (void);
 
-float BMP180_GetPress (int oss);
+float BMP180_Pressure (int oss);
 
-float BMP180_GetAlt (int oss);
+float BMP180_Altitude (int oss);
 
 #endif /* INC_BMP180_H_ */

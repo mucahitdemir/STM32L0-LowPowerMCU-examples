@@ -2,11 +2,11 @@
   ******************************************************************************
 
   BMP180 LIBRARY for STM32 using I2C
-  Author:   ControllersTech
-  Updated:  26/07/2020
+  Author:   Mucahit Demirci
+  Updated:  13/06/2022
 
   ******************************************************************************
-  Copyright (C) 2017 ControllersTech.com
+  Copyright (C) 2017 Mucahit Demirci
 
   This is a free software under the GNU license, you can redistribute it and/or modify it under the terms
   of the GNU General Public License version 3 as published by the Free Software Foundation.
@@ -16,18 +16,28 @@
   ******************************************************************************
 */
 
-
+/*
+*BMP180 DIGITAL PRESSURE SENSOR
+*The BMP180 is the function compatible successor of the BMP085, a new generation of high
+*precision digital pressure sensors for consumer applications.
+*
+*
+*
+*/
 
 #include "stm32l0xx_hal.h"
+
 #include "math.h"
 
 extern I2C_HandleTypeDef hi2c1;
+
 #define BMP180_I2C &hi2c1
 
 #define BMP180_ADDRESS 0xEE
 
 
-// Defines according to the datasheet
+/*Defines according to the datasheet*/
+
 short AC1 = 0;
 short AC2 = 0;
 short AC3 = 0;
@@ -40,7 +50,7 @@ short MB = 0;
 short MC = 0;
 short MD = 0;
 
-/********************/
+/*Calibration coefficients */
 long UT = 0;
 short oss = 0;
 long UP = 0;
@@ -54,36 +64,37 @@ long B6 = 0;
 unsigned long B7 = 0;
 
 /*******************/
-long Press = 0;
-long Temp = 0;
+long Pressure = 0;
+long Temperature = 0;
 
-#define atmPress 101325 //Pa
+#define ATM_Pressure 101325 //Pa
 
 
 
-void read_calliberation_data (void)
+void read_calibration_data (void)
 {
-	uint8_t Callib_Data[22] = {0};
-	uint16_t Callib_Start = 0xAA;
-	HAL_I2C_Mem_Read(BMP180_I2C, BMP180_ADDRESS, Callib_Start, 1, Callib_Data,22, HAL_MAX_DELAY);
+	uint8_t calibration_data[22] = {0};
+	uint16_t calibration_start = 0xAA;
+	
+	HAL_I2C_Mem_Read(BMP180_I2C, BMP180_ADDRESS, calibration_start, 1, calibration_data,22, HAL_MAX_DELAY);
 
-	AC1 = ((Callib_Data[0] << 8) | Callib_Data[1]);
-	AC2 = ((Callib_Data[2] << 8) | Callib_Data[3]);
-	AC3 = ((Callib_Data[4] << 8) | Callib_Data[5]);
-	AC4 = ((Callib_Data[6] << 8) | Callib_Data[7]);
-	AC5 = ((Callib_Data[8] << 8) | Callib_Data[9]);
-	AC6 = ((Callib_Data[10] << 8) | Callib_Data[11]);
-	B1 = ((Callib_Data[12] << 8) | Callib_Data[13]);
-	B2 = ((Callib_Data[14] << 8) | Callib_Data[15]);
-	MB = ((Callib_Data[16] << 8) | Callib_Data[17]);
-	MC = ((Callib_Data[18] << 8) | Callib_Data[19]);
-	MD = ((Callib_Data[20] << 8) | Callib_Data[21]);
+	AC1 = ((calibration_data[0] << 8) | calibration_data[1]);
+	AC2 = ((calibration_data[2] << 8) | calibration_data[3]);
+	AC3 = ((calibration_data[4] << 8) | calibration_data[5]);
+	AC4 = ((calibration_data[6] << 8) | calibration_data[7]);
+	AC5 = ((calibration_data[8] << 8) | calibration_data[9]);
+	AC6 = ((calibration_data[10]<< 8) | calibration_data[11]);
+	B1 = ((calibration_data[12] << 8) | calibration_data[13]);
+	B2 = ((calibration_data[14] << 8) | calibration_data[15]);
+	MB = ((calibration_data[16] << 8) | calibration_data[17]);
+	MC = ((calibration_data[18] << 8) | calibration_data[19]);
+	MD = ((calibration_data[20] << 8) | calibration_data[21]);
 
 }
 
 
-// Get uncompensated Temp
-uint16_t Get_UTemp (void)
+/* Observe uncompensated temperature data*/
+uint16_t uncompensated_temperature (void)
 {
 	uint8_t datatowrite = 0x2E;
 	uint8_t Temp_RAW[2] = {0};
@@ -93,18 +104,18 @@ uint16_t Get_UTemp (void)
 	return ((Temp_RAW[0]<<8) + Temp_RAW[1]);
 }
 
-float BMP180_GetTemp (void)
+float BMP180_Temperature (void)
 {
-	UT = Get_UTemp();
+	UT = uncompensated_temperature();
 	X1 = ((UT-AC6) * (AC5/(pow(2,15))));
 	X2 = ((MC*(pow(2,11))) / (X1+MD));
 	B5 = X1+X2;
-	Temp = (B5+8)/(pow(2,4));
-	return Temp/10.0;
+	Temperature = (B5+8)/(pow(2,4));
+	return Temperature/10.0;
 }
 
-// Get uncompensated Pressure
-uint32_t Get_UPress (int oss)   // oversampling setting 0,1,2,3
+/* Observe uncompensated pressure data*/
+uint32_t uncompensated_pressure (int oss)   // over-sampling setting 0,1,2,3
 {
 	uint8_t datatowrite = 0x34+(oss<<6);
 	uint8_t Press_RAW[3] = {0};
@@ -129,9 +140,9 @@ uint32_t Get_UPress (int oss)   // oversampling setting 0,1,2,3
 }
 
 
-float BMP180_GetPress (int oss)
+float BMP180_Pressure (int oss)
 {
-	UP = Get_UPress(oss);
+	UP = uncompensated_pressure(oss);
 	X1 = ((UT-AC6) * (AC5/(pow(2,15))));
 	X2 = ((MC*(pow(2,11))) / (X1+MD));
 	B5 = X1+X2;
@@ -145,25 +156,25 @@ float BMP180_GetPress (int oss)
 	X3 = ((X1+X2)+2)/pow(2,2);
 	B4 = AC4*(unsigned long)(X3+32768)/(pow(2,15));
 	B7 = ((unsigned long)UP-B3)*(50000>>oss);
-	if (B7<0x80000000) Press = (B7*2)/B4;
-	else Press = (B7/B4)*2;
-	X1 = (Press/(pow(2,8)))*(Press/(pow(2,8)));
+	if (B7<0x80000000) Pressure = (B7*2)/B4;
+	else Pressure = (B7/B4)*2;
+	X1 = (Pressure/(pow(2,8)))*(Pressure/(pow(2,8)));
 	X1 = (X1*3038)/(pow(2,16));
-	X2 = (-7357*Press)/(pow(2,16));
-	Press = Press + (X1+X2+3791)/(pow(2,4));
+	X2 = (-7357*Pressure)/(pow(2,16));
+	Pressure = Pressure + (X1+X2+3791)/(pow(2,4));
 
-	return Press;
+	return Pressure;
 }
 
 
-float BMP180_GetAlt (int oss)
+float BMP180_Altitude (int oss)
 {
-	BMP180_GetPress (oss);
-	return 44330*(1-(pow((Press/(float)atmPress), 0.19029495718)));
+	BMP180_Pressure (oss);
+	return 44330*(1-(pow((Pressure/(float)ATM_Pressure), 0.19029495718)));
 }
 
 void BMP180_Start (void)
 {
-	read_calliberation_data();
+	read_calibration_data();
 }
 

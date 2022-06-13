@@ -1,17 +1,7 @@
-21:23:58 **** Incremental Build of configuration Debug for project bmp180_stm32L0 ****
+07:45:41 **** Incremental Build of configuration Debug for project bmp180_stm32L0 ****
 make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0plus -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32L010xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32L0xx_HAL_Driver/Inc -I../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "bmp180_stm32L0.elf" @"objects.list"   -mcpu=cortex-m0plus -T"C:\Users\mucah\Desktop\MCU Courses\Low_power_MCU\bmp180_stm32L0\bmp180_stm32L0\STM32L010RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bmp180_stm32L0.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: bmp180_stm32L0.elf
- 
-arm-none-eabi-objdump -h -S  bmp180_stm32L0.elf  > "bmp180_stm32L0.list"
-arm-none-eabi-objcopy  -O binary  bmp180_stm32L0.elf  "bmp180_stm32L0.bin"
 arm-none-eabi-size   bmp180_stm32L0.elf 
    text	   data	    bss	    dec	    hex	filename
   42156	    516	   1924	  44596	   ae34	bmp180_stm32L0.elf
 Finished building: default.size.stdout
- 
-Finished building: bmp180_stm32L0.bin
- 
-Finished building: bmp180_stm32L0.list
  

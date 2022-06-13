@@ -95,9 +95,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  temperature = BMP180_GetTemp();
-	  pressure	= BMP180_GetPress(0);
-	  altitude  = BMP180_GetAlt(0);
+	  temperature = BMP180_Temperature();
+	  pressure	= BMP180_Pressure(0);
+	  altitude  = BMP180_Altitude(0);
 
 	  HAL_Delay(2000);
 

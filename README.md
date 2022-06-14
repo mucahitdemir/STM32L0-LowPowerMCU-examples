@@ -46,4 +46,5 @@ Source: Sparkfun bmp180 tutorial
 ### MPU6050 6 Axis Acceleration and Gyro Sensor
 
 
-###
+### DHT11 Temperature and Humidity Sensor 
+

@@ -1,7 +1,0 @@
-07:45:41 **** Incremental Build of configuration Debug for project bmp180_stm32L0 ****
-make -j12 all 
-arm-none-eabi-size   bmp180_stm32L0.elf 
-   text	   data	    bss	    dec	    hex	filename
-  42156	    516	   1924	  44596	   ae34	bmp180_stm32L0.elf
-Finished building: default.size.stdout
- 

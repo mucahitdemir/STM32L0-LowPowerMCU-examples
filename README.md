@@ -46,8 +46,20 @@ The ADXL345 is a small, thin, ultralow power, 3-axis accelerometer with high res
 Digital output data is formatted as 16-bit twos complement and is accessible through either a SPI (3- or 4-wire) or I2C digital interface.
 Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADXL345.pdf
 
+ADXL345 can be used for a whole bunch of things for example:
+- 3-axis acceleration measurement
+- Roll and Pitch measurement
+- Single or double tap measurement
+
+
+![image](https://user-images.githubusercontent.com/43001724/173820295-4a4bcdc8-97b5-4156-93c4-f7d15ccdf26a.png)
+
+
+### Multichannel ADC reading with STM32F0xx MCUs
+
 
 ### MPU6050 6 Axis Acceleration and Gyro Sensor
+
 
 
 ### DHT11 Temperature and Humidity Sensor 

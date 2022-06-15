@@ -52,6 +52,8 @@ ADXL345 can be used for a whole bunch of things for example:
 - Single or double tap measurement
 
 
+### Multichannel ADC reading with STM32F0xx MCUs
+
 
 ### MPU6050 6 Axis Acceleration and Gyro Sensor
 

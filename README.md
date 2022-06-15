@@ -42,6 +42,9 @@ Give it the right voltage: The BMP180 will operate on voltages from 1.8V to 3.6V
 Source: Sparkfun bmp180 tutorial
 
 ### Acceleration Sensor (ADXL345)  with STM32L0 MCU
+The ADXL345 is a small, thin, ultralow power, 3-axis accelerometer with high resolution (13-bit) measurement at up to ±16 g. 
+Digital output data is formatted as 16-bit twos complement and is accessible through either a SPI (3- or 4-wire) or I2C digital interface.
+Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADXL345.pdf
 
 
 ### MPU6050 6 Axis Acceleration and Gyro Sensor

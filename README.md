@@ -57,6 +57,8 @@ ADXL345 can be used for a whole bunch of things for example:
 
 ### MPU6050 6 Axis Acceleration and Gyro Sensor
 
+![image](https://user-images.githubusercontent.com/43001724/173820295-4a4bcdc8-97b5-4156-93c4-f7d15ccdf26a.png)
+
 
 ### DHT11 Temperature and Humidity Sensor 
 

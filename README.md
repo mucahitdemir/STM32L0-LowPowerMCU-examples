@@ -64,3 +64,8 @@ ADXL345 can be used for a whole bunch of things for example:
 
 ### DHT11 Temperature and Humidity Sensor 
 
+
+### Data storage and LED control (ESP8266 & STM32LOxx)
+The ESP8266 WiFi Module is a self contained SOC with integrated TCP/IP protocol stack that can give any microcontroller access to your WiFi network. 
+The ESP8266 is capable of either hosting an application or offloading all Wi-Fi networking functions from another application processor.
+

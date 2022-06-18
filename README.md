@@ -50,8 +50,6 @@ ADXL345 can be used for a whole bunch of things for example:
 - 3-axis acceleration measurement
 - Roll and Pitch measurement
 - Single or double tap measurement
-
-
 ![image](https://user-images.githubusercontent.com/43001724/173820295-4a4bcdc8-97b5-4156-93c4-f7d15ccdf26a.png)
 
 
@@ -66,6 +64,7 @@ ADXL345 can be used for a whole bunch of things for example:
 
 ### RC522 RFID NFC Module
 The RC522 is a 13.56MHz RFID module that is based on the MFRC522 controller from NXP semiconductors. The module can supports I2C, SPI and UART and normally is shipped with a RFID card and key fob. It is commonly used in attendance systems and other person/object identification applications.
+
 ![image](https://user-images.githubusercontent.com/43001724/174342020-112e86fd-f7bc-41ac-bcd5-fb7494be6c30.png)
 
 I used this module for authentication for accessing a specific place or program.

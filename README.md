@@ -62,6 +62,14 @@ ADXL345 can be used for a whole bunch of things for example:
 
 ### DHT11 Temperature and Humidity Sensor 
 
+### Analog-to-Digital Conversion (ADC) Multi-channel
+
+The ADC is one of the most expensive electronic components especially when it does have a high sampling rate and high resolution. Therefore, it’s a valuable resource in microcontrollers and different manufacturers provide us (the firmware engineers) with various features so as to make the best use of it.
+
+**Direct Memory Access (DMA) Method**
+
+Lastly, the DMA method is the most efficient way of converting multiple ADC channels at very high rates and still transfers the results to the memory without CPU intervention which is so cool and time-saving technique.
+
 ### RC522 RFID NFC Module
 The RC522 is a 13.56MHz RFID module that is based on the MFRC522 controller from NXP semiconductors. The module can supports I2C, SPI and UART and normally is shipped with a RFID card and key fob. It is commonly used in attendance systems and other person/object identification applications.
 

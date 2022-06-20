@@ -66,6 +66,21 @@ ADXL345 can be used for a whole bunch of things for example:
 
 The ADC is one of the most expensive electronic components especially when it does have a high sampling rate and high resolution. Therefore, it’s a valuable resource in microcontrollers and different manufacturers provide us (the firmware engineers) with various features so as to make the best use of it.
 
+ **ADC Reading Methods**
+
+  We can read actually configure the ADC module to take samples (conversions) in 3 different ways. Depending on the application types and requirements you can choose the best fit for you.
+
+**1 Polling**
+
+First of which is the polling method, in this method we’d start an ADC conversion and stop the CPU at this point to wait for the ADC conversion completion. Only after ADC conversion completed, the CPU can resume the main code execution.
+
+**2 Interrupts**
+
+The second method is by using interrupts, so we can trigger the ADC in order to start a conversion and the CPU continues executing the main code routine. Upon conversion completion, the ADC fires an interrupt and the CPU is notified so that it can switch the context to the ISR handler and save the ADC conversion results.
+
+Despite being an efficient way, the interrupt method can add so much overhead to the CPU and cause very high CPU loading. Especially when you’re doing so many conversions per second.
+
+
 **Direct Memory Access (DMA) Method**
 
 Lastly, the DMA method is the most efficient way of converting multiple ADC channels at very high rates and still transfers the results to the memory without CPU intervention which is so cool and time-saving technique.

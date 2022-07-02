@@ -60,8 +60,6 @@ ADXL345 can be used for a whole bunch of things for example:
 
 ### TIMERS: Motor and LED control with PWM
 
-### DHT11 Temperature and Humidity Sensor 
-
 ### Analog-to-Digital Conversion (ADC) Multi-channel
 
 The ADC is one of the most expensive electronic components especially when it does have a high sampling rate and high resolution. Therefore, it’s a valuable resource in microcontrollers and different manufacturers provide us (the firmware engineers) with various features so as to make the best use of it.

@@ -1,6 +1,9 @@
 # STM32L0-LowPowerMCU-examples
 ![image](https://user-images.githubusercontent.com/43001724/173546983-dee75793-f381-4e63-9514-854ce17e5187.png)
 
+On these examples, I will also use **cppcheck** testing tool for static code analysis.
+Cppcheck is a static analysis tool for C/C++ code. It provides unique code analysis to detect bugs and focuses on detecting undefined behaviour and dangerous coding constructs. The goal is to have very few false positives. Cppcheck is designed to be able to analyze your C/C++ code even if it has non-standard syntax (common in embedded projects). Link:https://sourceforge.net/p/cppcheck/wiki/Home/
+
 ## Step motor control with ULN2003A Motor Driver
 In the first example, a step motor is controlled by an stm32f4xx discovery. I could not drive the motor with low power MCU due to low ampere I presume.
 

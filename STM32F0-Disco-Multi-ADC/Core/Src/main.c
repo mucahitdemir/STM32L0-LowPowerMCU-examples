@@ -1,20 +1,4 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -40,7 +24,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- ADC_HandleTypeDef hadc;
+ADC_HandleTypeDef hadc;
+
 DMA_HandleTypeDef hdma_adc;
 
 TIM_HandleTypeDef htim1;
@@ -71,20 +56,23 @@ char IN3[16] ="";
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-	//if(hadc->Instance == ADC)
-	//{
+
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
+
+	HAL_Delay(100);
+/*
 		for(int i = 0; i<4;i++)
 		{
-
 			data[i] = ADC_Buffer[i];
 		}
-
-
-
-	//}
+*/
 }
+void ADC_DMAConvCplt(DMA_HandleTypeDef *hdma)
+{
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
 
-
+	HAL_Delay(100);
+}
 
 /* USER CODE END 0 */
 
@@ -120,10 +108,15 @@ int main(void)
   MX_ADC_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+
   HAL_TIM_Base_Start_IT(&htim1);
+
   HAL_ADCEx_Calibration_Start(&hadc);
+
   /* USER CODE END 2 */
+
   HAL_ADC_Start_DMA(&hadc, (uint32_t*)ADC_Buffer, sizeof(ADC_Buffer)/sizeof(ADC_Buffer[0]));
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
    while (1)
@@ -132,11 +125,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-      HAL_Delay(1);
- 	  sprintf(IN0," ADC IN0 = %d",ADC_Buffer[0]);
- 	  sprintf(IN1," ADC IN1 = %d",ADC_Buffer[1]);
- 	  sprintf(IN2," ADC IN2 = %d",ADC_Buffer[2]);
- 	  sprintf(IN3," ADC IN3 = %d",ADC_Buffer[3]);
+ 	  sprintf(IN0,"ADC IN0 =%d",(const char)ADC_Buffer[0]);
+ 	  sprintf(IN1,"ADC IN1 =%d",(const char)ADC_Buffer[1]);
+ 	  sprintf(IN2,"ADC IN2 =%d",(const char)ADC_Buffer[2]);
+ 	  sprintf(IN3,"ADC IN3 =%d",(const char)ADC_Buffer[3]);
    }
   /* USER CODE END 3 */
 }

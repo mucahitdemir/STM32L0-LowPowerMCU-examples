@@ -11,6 +11,13 @@ In the first example, a step motor is controlled by an stm32f4xx discovery. I co
 ## BQ76952 Evalution Board (EVM) for Battery Monitors and Balancers
 The BQ76952EVM evaluation module (EVM) is a complete evaluation system for the BQ76952, a 3-cell to 16-cell Li-Ion battery monitor integrated circuit. The EVM consists of a BQ76952 circuit module which is used for simple evaluation of the BQ76952 monitor function. 
 
+Features
+
+- Complete evaluation system for the BQ76952 3-cell to 16-cell Li-Ion and Phosphate battery monitor
+- Populated circuit module for 16-cell configuration for quick setup
+- Communication available with included USB interface adapter or available on 4-pin connector
+- Resistor cell simulator for operation with only a power supply
+- This circuit module is tested and includes firmware, GUI, demo and getting started guide.
 
 ## BMP180 Digital pressure sensor with stm32L0 low power MCU  
 Barometric pressure sensors measure the absolute pressure of the air around them. This pressure varies with both the weather and altitude. 

@@ -7,6 +7,11 @@ Cppcheck is a static analysis tool for C/C++ code. It provides unique code analy
 ## Step motor control with ULN2003A Motor Driver
 In the first example, a step motor is controlled by an stm32f4xx discovery. I could not drive the motor with low power MCU due to low ampere I presume.
 
+
+## BQ76952 Evalution Board (EVM) for Battery Monitors and Balancers
+The BQ76952EVM evaluation module (EVM) is a complete evaluation system for the BQ76952, a 3-cell to 16-cell Li-Ion battery monitor integrated circuit. The EVM consists of a BQ76952 circuit module which is used for simple evaluation of the BQ76952 monitor function. 
+
+
 ## BMP180 Digital pressure sensor with stm32L0 low power MCU  
 Barometric pressure sensors measure the absolute pressure of the air around them. This pressure varies with both the weather and altitude. 
 Depending on how you interpret the data, you can monitor changes in the weather, measure altitude, or any other tasks that require an accurate pressure reading.

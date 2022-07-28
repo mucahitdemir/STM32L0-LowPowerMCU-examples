@@ -19,7 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* Private includes --- -------------------------------------------------------*/
+/* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -31,6 +31,17 @@ HAL_StatusTypeDef result;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define DEV_ADDR  0x10  // BQ769x2 address is 0x10 including R/W bit or 0x8 as 7-bit address
+#define CRC_Mode 0  // 0 for disabled, 1 for enabled
+#define MAX_BUFFER_SIZE 10
+#define R 0 // Read; Used in DirectCommands and Subcommands functions
+#define W 1 // Write; Used in DirectCommands and Subcommands functions
+#define W2 2 // Write data with two bytes; Used in Subcommands function
+#define SET_CFGUPDATE 0x0090
+#define EXIT_CFGUPDATE 0x0092
+#define CUVThreshold 0x9275      //Protections:CUV:Threshold
+#define COVThreshold 0x9278      //Protections:COV:Threshold
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -41,6 +52,10 @@ HAL_StatusTypeDef result;
 /* Private variables ---------------------------------------------------------*/
  I2C_HandleTypeDef hi2c2;
 
+TIM_HandleTypeDef htim1;
+
+UART_HandleTypeDef huart4;
+
 /* USER CODE BEGIN PV */
 #define write_address 0x10
 #define read_address 0x11
@@ -50,17 +65,124 @@ HAL_StatusTypeDef result;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C2_Init(void);
+static void MX_TIM1_Init(void);
+static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 uint16_t buffer[2];
 uint8_t sent[2];
 uint8_t ENTER_CONFIGMODE[2];
 uint8_t battery_status[2];
 uint8_t full_access[4];
+
+
+
+
+
+void I2C_WriteReg(uint8_t reg_addr, uint8_t *reg_data, uint8_t count)
+{
+	uint8_t TX_Buffer [MAX_BUFFER_SIZE] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+#if CRC_Mode
+	{
+		uint8_t crc_count = 0;
+		crc_count = count * 2;
+		uint8_t crc1stByteBuffer [3] = {0x10, reg_addr, reg_data[0]};
+		unsigned int j;
+		unsigned int i;
+		uint8_t temp_crc_buffer [3];
+
+		TX_Buffer[0] = reg_data[0];
+		TX_Buffer[1] = CRC8(crc1stByteBuffer,3);
+
+		j = 2;
+		for(i=1; i<count; i++)
+		{
+			TX_Buffer[j] = reg_data[i];
+			j = j + 1;
+			temp_crc_buffer[0] = reg_data[i];
+			TX_Buffer[j] = CRC8(temp_crc_buffer,1);
+			j = j + 1;
+		}
+		HAL_I2C_Mem_Write(&hi2c1, DEV_ADDR, reg_addr, 1, TX_Buffer, crc_count, 1000);
+	}
+#else
+	HAL_I2C_Mem_Write(&hi2c2, DEV_ADDR, reg_addr, 1, reg_data, count, 1000);
+#endif
+}
+void CommandSubcommands(uint16_t command) //For Command only Subcommands
+// See the TRM or the BQ76952 header file for a full list of Command-only subcommands
+{	//For DEEPSLEEP/SHUTDOWN subcommand you will need to call this function twice consecutively
+
+	uint8_t TX_Reg[2] = {0x00, 0x00};
+
+	//TX_Reg in little endian format
+	TX_Reg[0] = command & 0xff;
+	TX_Reg[1] = (command >> 8) & 0xff;
+
+	I2C_WriteReg(0x3E,TX_Reg,2);
+	HAL_Delay(2000);
+}
+unsigned char Checksum(unsigned char *ptr, unsigned char len)
+// Calculates the checksum when writing to a RAM register. The checksum is the inverse of the sum of the bytes.
+{
+	unsigned char i;
+	unsigned char checksum = 0;
+
+	for(i=0; i<len; i++)
+		checksum += ptr[i];
+
+	checksum = 0xff & ~checksum;
+
+	return(checksum);
+}
+void BQ769x2_SetRegister(uint16_t reg_addr, uint32_t reg_data, uint8_t datalen)
+{
+	uint8_t TX_Buffer[2] = {0x00, 0x00};
+	uint8_t TX_RegData[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+	//TX_RegData in little endian format
+	TX_RegData[0] = reg_addr & 0xff;
+	TX_RegData[1] = (reg_addr >> 8) & 0xff;
+	TX_RegData[2] = reg_data & 0xff; //1st byte of data
+
+	switch(datalen)
+    {
+		case 1: //1 byte datalength
+      		I2C_WriteReg(0x3E, TX_RegData, 3);
+			HAL_Delay(2000);
+			TX_Buffer[0] = Checksum(TX_RegData, 3);
+			TX_Buffer[1] = 0x05; //combined length of register address and data
+      		I2C_WriteReg(0x60, TX_Buffer, 2); // Write the checksum and length
+			HAL_Delay(2000);
+			break;
+		case 2: //2 byte datalength
+			TX_RegData[3] = (reg_data >> 8) & 0xff;
+			I2C_WriteReg(0x3E, TX_RegData, 4);
+			HAL_Delay(2000);
+			TX_Buffer[0] = Checksum(TX_RegData, 4);
+			TX_Buffer[1] = 0x06; //combined length of register address and data
+      		I2C_WriteReg(0x60, TX_Buffer, 2); // Write the checksum and length
+			HAL_Delay(2000);
+			break;
+		case 4: //4 byte datalength, Only used for CCGain and Capacity Gain
+			TX_RegData[3] = (reg_data >> 8) & 0xff;
+			TX_RegData[4] = (reg_data >> 16) & 0xff;
+			TX_RegData[5] = (reg_data >> 24) & 0xff;
+			I2C_WriteReg(0x3E, TX_RegData, 6);
+			HAL_Delay(2000);
+			TX_Buffer[0] = Checksum(TX_RegData, 6);
+			TX_Buffer[1] = 0x08; //combined length of register address and data
+      		I2C_WriteReg(0x60, TX_Buffer, 2); // Write the checksum and length
+			HAL_Delay(2000);
+			break;
+    }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -92,30 +214,44 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C2_Init();
+  MX_TIM1_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
-sent[0] = 0x12;
+sent[0] = 0x12; // stack voltage
 ENTER_CONFIGMODE[0] = 0x0090;
 full_access[0] = 0xFFFFFFFF;
+
+
+CommandSubcommands(SET_CFGUPDATE);
+
+HAL_I2C_Master_Transmit(&hi2c2, write_address, sent, 1, 100);
+
+HAL_I2C_Master_Receive(&hi2c2, read_address, buffer, 2, 100);
+
+HAL_Delay(250);
+
+BQ769x2_SetRegister(CUVThreshold, 0x14, 1);
+
+// Set up COV (over-voltage) Threshold - 0x9278 = 0x55 (4301 mV)
+// COV Threshold is this value multiplied by 50.6mV
+BQ769x2_SetRegister(COVThreshold, 0x45, 1);
+
+CommandSubcommands(EXIT_CFGUPDATE);
+
+
   /* USER CODE END 2 */
-
-//HAL_I2C_Master_Receive(&hi2c2, read_address, battery_status, 2, 100);
-
-//HAL_I2C_Master_Transmit(&hi2c2, write_address, full_access, 4, 100);
-
-HAL_I2C_Master_Transmit(&hi2c2, write_address, ENTER_CONFIGMODE, 2, 100);
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
-	  HAL_I2C_Master_Transmit(&hi2c2, write_address, sent, 1, 100);
+	//  HAL_I2C_Master_Transmit(&hi2c2, write_address, sent, 1, 100);
 
 
 
-	 HAL_I2C_Master_Receive(&hi2c2, read_address, buffer, 2, 100);
+	// HAL_I2C_Master_Receive(&hi2c2, read_address, buffer, 2, 100);
   }
   /* USER CODE END 3 */
 }
@@ -158,8 +294,11 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C2;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_I2C2
+                              |RCC_PERIPHCLK_TIM1;
+  PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
   PeriphClkInit.I2c2ClockSelection = RCC_I2C2CLKSOURCE_HSI;
+  PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLK_HCLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -182,7 +321,7 @@ static void MX_I2C2_Init(void)
 
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.Timing = 0x2000090E;
+  hi2c2.Init.Timing = 0x0000020B;
   hi2c2.Init.OwnAddress1 = 0;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -215,6 +354,88 @@ static void MX_I2C2_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
+  * @brief UART4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_UART4_Init(void)
+{
+
+  /* USER CODE BEGIN UART4_Init 0 */
+
+  /* USER CODE END UART4_Init 0 */
+
+  /* USER CODE BEGIN UART4_Init 1 */
+
+  /* USER CODE END UART4_Init 1 */
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 115200;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN UART4_Init 2 */
+
+  /* USER CODE END UART4_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -230,7 +451,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LD2_Pin|GPIO_PIN_8, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -246,12 +467,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LD2_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin;
+  /*Configure GPIO pins : LD2_Pin PA8 */
+  GPIO_InitStruct.Pin = LD2_Pin|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 

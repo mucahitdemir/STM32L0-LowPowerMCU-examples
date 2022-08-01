@@ -68,8 +68,6 @@ ADXL345 can be used for a whole bunch of things for example:
 ![image](https://user-images.githubusercontent.com/43001724/173820295-4a4bcdc8-97b5-4156-93c4-f7d15ccdf26a.png)
 
 
-### Multichannel ADC reading with STM32F0xx MCUs
-
 
 ### MPU6050 6 Axis Acceleration and Gyro Sensor
 

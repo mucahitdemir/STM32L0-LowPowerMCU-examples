@@ -72,6 +72,9 @@ ADXL345 can be used for a whole bunch of things for example:
 ### MPU6050 6 Axis Acceleration and Gyro Sensor
 
 ### TIMERS: Motor and LED control with PWM
+There are many different ways to control the speed of DC motors but one very simple and easy way is to use Pulse Width Modulation.
+![image](https://user-images.githubusercontent.com/43001724/183817022-faaa6d79-f022-4b22-9e77-0ea517549aa7.png)
+
 
 ### Analog-to-Digital Conversion (ADC) Multi-channel
 

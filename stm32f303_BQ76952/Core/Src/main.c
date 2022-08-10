@@ -81,9 +81,6 @@ uint8_t battery_status[2];
 uint8_t full_access[4];
 
 
-
-
-
 void I2C_WriteReg(uint8_t reg_addr, uint8_t *reg_data, uint8_t count)
 {
 	uint8_t TX_Buffer [MAX_BUFFER_SIZE] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -219,18 +216,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
 sent[0] = 0x12; // stack voltage
 ENTER_CONFIGMODE[0] = 0x0090;
+
 full_access[0] = 0xFFFFFFFF;
 
 
 CommandSubcommands(SET_CFGUPDATE);
 
-HAL_I2C_Master_Transmit(&hi2c2, write_address, sent, 1, 100);
 
-HAL_I2C_Master_Receive(&hi2c2, read_address, buffer, 2, 100);
-
-HAL_Delay(250);
-
-BQ769x2_SetRegister(CUVThreshold, 0x14, 1);
 
 // Set up COV (over-voltage) Threshold - 0x9278 = 0x55 (4301 mV)
 // COV Threshold is this value multiplied by 50.6mV
@@ -239,6 +231,17 @@ BQ769x2_SetRegister(COVThreshold, 0x45, 1);
 CommandSubcommands(EXIT_CFGUPDATE);
 
 
+void BQ769x2_settings(uint16_t threshold_address, uint16_t changed_variable ){
+
+
+	CommandSubcommands(SET_CFGUPDATE);
+
+	BQ769x2_SetRegister(threshold_address, changed_variable, 1);
+
+	CommandSubcommands(EXIT_CFGUPDATE);
+
+
+}
   /* USER CODE END 2 */
 
   /* Infinite loop */
